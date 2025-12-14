@@ -1,15 +1,17 @@
 // 3D Renderer using Three.js
 import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
 import { Water } from './water.js';
-import { createSurfingPikachu, createSplashParticles } from './models.js';
+import { createSurfingCharacter, createSplashParticles } from './models.js';
 import Config from './config.js';
+import Characters from './characters/index.js';
 
 const Renderer3D = {
     scene: null,
     camera: null,
     renderer: null,
     water: null,
-    pikachu: null,
+    character: null,  // Current 3D character on surfboard
+    currentCharacterId: null,  // Track which character is loaded
     splashParticles: null,
     clock: null,
     scoreSprites: [],
@@ -50,16 +52,35 @@ const Renderer3D = {
         this.water.mesh.position.set(0, 0, 0);
         this.scene.add(this.water.mesh);
 
-        // Pikachu
-        this.pikachu = createSurfingPikachu();
-        this.pikachu.position.set(0, 2, 0);
-        this.scene.add(this.pikachu);
+        // Character (use selected character from CharacterManager)
+        this.setCharacter(Characters.currentId);
 
         // Splash particles
         this.splashParticles = createSplashParticles(100);
         this.scene.add(this.splashParticles);
 
         return this;
+    },
+
+    // Set or change the current 3D character
+    setCharacter(characterId) {
+        // Remove old character if exists
+        if (this.character) {
+            this.scene.remove(this.character);
+        }
+
+        // Create new character
+        this.currentCharacterId = characterId;
+        this.character = createSurfingCharacter(characterId);
+        this.character.position.set(0, 2, 0);
+        this.scene.add(this.character);
+    },
+
+    // Update character if selection changed
+    syncCharacter() {
+        if (this.currentCharacterId !== Characters.currentId) {
+            this.setCharacter(Characters.currentId);
+        }
     },
 
     setupLighting() {
@@ -214,9 +235,12 @@ const Renderer3D = {
         this.scene.add(group);
     },
 
-    // Update pikachu position and rotation
+    // Update character position and rotation
     updatePikachu(x, y, rotation, distance) {
-        if (!this.pikachu) return;
+        if (!this.character) return;
+
+        // Sync character if selection changed
+        this.syncCharacter();
 
         // Convert 2D coords to 3D
         // 2D: Y increases downward, water at WATER_LEVEL (~230)
@@ -225,11 +249,11 @@ const Renderer3D = {
         const worldY = (Config.WATER_LEVEL - y) * 0.08 + 0.5;
         const worldZ = 0;
 
-        this.pikachu.position.set(worldX, worldY, worldZ);
-        this.pikachu.rotation.z = -rotation;
+        this.character.position.set(worldX, worldY, worldZ);
+        this.character.rotation.z = -rotation;
 
         // Slight forward tilt when moving
-        this.pikachu.rotation.x = 0.1;
+        this.character.rotation.x = 0.1;
 
         // Update camera to follow
         const targetCamPos = new THREE.Vector3(
@@ -244,13 +268,13 @@ const Renderer3D = {
         this.water.mesh.position.x = -distance * 0.05;
     },
 
-    // Add ripple effect at pikachu position
+    // Add ripple effect at character position
     addRipple(intensity = 1.0) {
-        if (!this.water) return;
+        if (!this.water || !this.character) return;
 
         const time = this.clock.getElapsedTime();
-        const x = this.pikachu.position.x;
-        const z = this.pikachu.position.z;
+        const x = this.character.position.x;
+        const z = this.character.position.z;
 
         this.water.addRipple(x, z, intensity, time);
     },
@@ -260,14 +284,14 @@ const Renderer3D = {
         this.addRipple(intensity);
 
         // Activate particle burst
-        if (this.splashParticles) {
+        if (this.splashParticles && this.character) {
             const positions = this.splashParticles.geometry.attributes.position.array;
             const count = positions.length / 3;
 
             for (let i = 0; i < count; i++) {
-                positions[i * 3] = this.pikachu.position.x + (Math.random() - 0.5) * 2;
-                positions[i * 3 + 1] = this.pikachu.position.y;
-                positions[i * 3 + 2] = this.pikachu.position.z + (Math.random() - 0.5) * 2;
+                positions[i * 3] = this.character.position.x + (Math.random() - 0.5) * 2;
+                positions[i * 3 + 1] = this.character.position.y;
+                positions[i * 3 + 2] = this.character.position.z + (Math.random() - 0.5) * 2;
             }
 
             this.splashParticles.geometry.attributes.position.needsUpdate = true;
@@ -278,6 +302,8 @@ const Renderer3D = {
 
     // Create score popup (3D text sprite)
     createScorePopup(score, flips) {
+        if (!this.character) return;
+
         const canvas = document.createElement('canvas');
         canvas.width = 256;
         canvas.height = 128;
@@ -299,7 +325,7 @@ const Renderer3D = {
             transparent: true
         });
         const sprite = new THREE.Sprite(material);
-        sprite.position.copy(this.pikachu.position);
+        sprite.position.copy(this.character.position);
         sprite.position.y += 3;
         sprite.scale.set(4, 2, 1);
         sprite.userData.startTime = this.clock.getElapsedTime();

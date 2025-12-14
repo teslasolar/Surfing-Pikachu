@@ -59,7 +59,6 @@ const Game = {
             restartBtn: document.getElementById('restartBtn'),
             modeToggle: document.getElementById('modeToggle'),
             modeLabel: document.getElementById('modeLabel'),
-            mode3DNote: document.getElementById('mode3DNote'),
             charName: document.getElementById('charName'),
             charPrev: document.getElementById('charPrev'),
             charNext: document.getElementById('charNext'),
@@ -199,10 +198,6 @@ const Game = {
         }
         if (this.els.modeLabel) {
             this.els.modeLabel.textContent = this.is3D ? '3D Mode' : '2D Mode';
-        }
-        // Show note that 3D only supports Pikachu
-        if (this.els.mode3DNote) {
-            this.els.mode3DNote.style.display = this.is3D ? 'block' : 'none';
         }
 
         // Toggle canvas visibility if playing
