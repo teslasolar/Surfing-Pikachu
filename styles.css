@@ -1,0 +1,315 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Press Start 2P', 'Courier New', monospace;
+    overflow: hidden;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+.game-container {
+    position: relative;
+    width: 480px;
+    background: #000;
+    border: 4px solid #ffcb05;
+    border-radius: 8px;
+    box-shadow: 0 0 30px rgba(255, 203, 5, 0.3);
+}
+
+#gameCanvas {
+    display: none;
+    background: linear-gradient(180deg, #87ceeb 0%, #4fa4d1 60%, #1e90ff 100%);
+}
+
+.game-ui {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    font-size: 8px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ui-left, .ui-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.ui-center {
+    text-align: center;
+}
+
+.progress-bar, .hp-bar {
+    width: 100px;
+    height: 12px;
+    background: #333;
+    border: 2px solid #fff;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #4CAF50, #8BC34A);
+    transition: width 0.1s;
+}
+
+.hp-fill {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #ff6b6b, #ffd93d);
+    transition: width 0.1s;
+}
+
+.progress-label, .hp-label {
+    font-size: 6px;
+    color: #aaa;
+}
+
+.hp-value {
+    font-size: 8px;
+    color: #ffd93d;
+}
+
+.radness .label {
+    display: block;
+    font-size: 6px;
+    color: #aaa;
+    margin-bottom: 2px;
+}
+
+.radness .value {
+    font-size: 14px;
+    color: #ffcb05;
+    text-shadow: 2px 2px #000;
+}
+
+/* Title Screen */
+.title-screen {
+    padding: 30px 20px;
+    text-align: center;
+    background: linear-gradient(180deg, #1e3a5f 0%, #0d2137 100%);
+    color: #fff;
+}
+
+.title-logo {
+    margin-bottom: 25px;
+}
+
+.pikachu-title {
+    font-size: 48px;
+    margin-bottom: 10px;
+    animation: bounce 1s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.title-screen h1 {
+    font-size: 20px;
+    color: #ffcb05;
+    text-shadow: 3px 3px #3d7dca, -1px -1px #2a5298;
+    margin-bottom: 8px;
+    letter-spacing: 2px;
+}
+
+.subtitle {
+    font-size: 10px;
+    color: #87ceeb;
+}
+
+.instructions {
+    background: rgba(0, 0, 0, 0.4);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.instructions h3 {
+    font-size: 10px;
+    color: #ffcb05;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.instructions p {
+    font-size: 8px;
+    margin-bottom: 6px;
+    color: #ddd;
+    line-height: 1.6;
+}
+
+.scoring-info {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #444;
+}
+
+.scoring-info h4 {
+    font-size: 8px;
+    color: #ffcb05;
+    margin-bottom: 6px;
+}
+
+.scoring-info p {
+    font-size: 7px;
+    text-align: center;
+}
+
+.start-btn {
+    font-family: 'Press Start 2P', 'Courier New', monospace;
+    font-size: 12px;
+    padding: 12px 30px;
+    background: linear-gradient(180deg, #ffcb05 0%, #f5a623 100%);
+    color: #1a1a2e;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #c7920a, 0 6px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.1s;
+}
+
+.start-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 #c7920a, 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+.start-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #c7920a;
+}
+
+.credits {
+    margin-top: 20px;
+}
+
+.credits p {
+    font-size: 6px;
+    color: #666;
+}
+
+/* Game Over Screen */
+.game-over-screen {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    color: #fff;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 30px;
+}
+
+.game-over-screen h2 {
+    font-size: 24px;
+    color: #ffcb05;
+    margin-bottom: 30px;
+    text-shadow: 3px 3px #000;
+}
+
+.final-score {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    min-width: 250px;
+}
+
+.score-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #333;
+}
+
+.score-row.total {
+    font-size: 12px;
+    color: #ffcb05;
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-top: 5px;
+}
+
+/* Flip indicator */
+.flip-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    color: #ffcb05;
+    text-shadow: 2px 2px #000;
+    opacity: 0;
+    pointer-events: none;
+    animation: flipPop 0.5s ease-out forwards;
+}
+
+@keyframes flipPop {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(0.5);
+    }
+    50% {
+        opacity: 1;
+        transform: translate(-50%, -70%) scale(1.2);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -100%) scale(1);
+    }
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+    .game-container {
+        width: 100%;
+        max-width: 480px;
+        border-width: 2px;
+        border-radius: 0;
+    }
+
+    #gameCanvas {
+        width: 100%;
+        height: auto;
+    }
+}
+
+/* Mobile touch controls hint */
+.touch-hint {
+    display: none;
+    font-size: 7px;
+    color: #888;
+    margin-top: 10px;
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .touch-hint {
+        display: block;
+    }
+}

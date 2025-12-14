@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pikachu's Beach - Surfing Pikachu Game</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏄</text></svg>">
+</head>
+<body>
+    <div class="game-container">
+        <div class="title-screen" id="titleScreen">
+            <div class="title-logo">
+                <div class="pikachu-title">⚡</div>
+                <h1>PIKACHU'S BEACH</h1>
+                <div class="subtitle">Surfing Pikachu Minigame</div>
+            </div>
+            <div class="instructions">
+                <h3>HOW TO PLAY</h3>
+                <p><strong>← →</strong> Arrow Keys to flip while in the air</p>
+                <p><strong>↑</strong> to jump off waves</p>
+                <p>Land flat on the water to avoid crashing!</p>
+                <div class="scoring-info">
+                    <h4>SCORING</h4>
+                    <p>1 Flip: 50 pts | 2 Flips: 150 pts | 3 Flips: 500 pts</p>
+                </div>
+            </div>
+            <button class="start-btn" id="startBtn">START GAME</button>
+            <div class="credits">
+                <p>Inspired by Pokémon Yellow (1998)</p>
+            </div>
+        </div>
+
+        <canvas id="gameCanvas" width="480" height="320"></canvas>
+
+        <div class="game-ui" id="gameUI">
+            <div class="ui-left">
+                <div class="progress-label">PROGRESS</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+            <div class="ui-center">
+                <div class="radness">
+                    <span class="label">RADNESS</span>
+                    <span class="value" id="radnessValue">0</span>
+                </div>
+            </div>
+            <div class="ui-right">
+                <div class="hp-label">HP</div>
+                <div class="hp-bar">
+                    <div class="hp-fill" id="hpFill"></div>
+                </div>
+                <div class="hp-value" id="hpValue">6000</div>
+            </div>
+        </div>
+
+        <div class="game-over-screen" id="gameOverScreen">
+            <h2 id="gameOverTitle">GAME OVER</h2>
+            <div class="final-score">
+                <div class="score-row">
+                    <span>Radness:</span>
+                    <span id="finalRadness">0</span>
+                </div>
+                <div class="score-row">
+                    <span>HP Bonus:</span>
+                    <span id="finalHP">0</span>
+                </div>
+                <div class="score-row total">
+                    <span>TOTAL SCORE:</span>
+                    <span id="finalScore">0</span>
+                </div>
+            </div>
+            <button class="start-btn" id="restartBtn">PLAY AGAIN</button>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
