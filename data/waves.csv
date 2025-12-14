@@ -1,0 +1,4 @@
+size,height,width,probability
+small,40,80,0.4
+medium,70,120,0.35
+large,100,160,0.25

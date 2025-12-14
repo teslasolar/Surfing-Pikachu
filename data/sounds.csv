@@ -1,0 +1,7 @@
+name,waveform,freqStart,freqEnd,freqTime,gainStart,gainEnd,duration
+jump,sine,400,800,0.1,0.2,0.01,0.15
+flip,sine,600,1200,0.08,0.15,0.01,0.1
+splash,sawtooth,150,50,0.3,0.3,0.01,0.3
+land,sine,300,100,0.1,0.2,0.01,0.12
+score,sine,523,784,0.2,0.2,0.01,0.3
+win,sine,523,1047,0.45,0.25,0.01,0.6
