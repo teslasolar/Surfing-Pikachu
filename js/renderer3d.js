@@ -219,8 +219,10 @@ const Renderer3D = {
         if (!this.pikachu) return;
 
         // Convert 2D coords to 3D
+        // 2D: Y increases downward, water at WATER_LEVEL (~230)
+        // 3D: Y increases upward, water at 0
         const worldX = (x - Config.GAME_WIDTH / 2) * 0.1;
-        const worldY = y * 0.05 + 2;
+        const worldY = (Config.WATER_LEVEL - y) * 0.08 + 0.5;
         const worldZ = 0;
 
         this.pikachu.position.set(worldX, worldY, worldZ);
