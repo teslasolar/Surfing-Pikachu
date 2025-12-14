@@ -4,6 +4,7 @@ import Audio from './audio.js';
 import Input from './input.js';
 import Renderer from './renderer.js';
 import Physics from './physics.js';
+import Characters from './characters.js';
 
 // Dynamic import for 3D (only load if needed)
 let Renderer3D = null;
@@ -17,6 +18,7 @@ const Game = {
     won: false,
     is3D: false,
     renderer3DLoaded: false,
+    renderer3DError: null,
 
     pikachu: null,
 
@@ -45,7 +47,11 @@ const Game = {
             startBtn: document.getElementById('startBtn'),
             restartBtn: document.getElementById('restartBtn'),
             modeToggle: document.getElementById('modeToggle'),
-            modeLabel: document.getElementById('modeLabel')
+            modeLabel: document.getElementById('modeLabel'),
+            charName: document.getElementById('charName'),
+            charPrev: document.getElementById('charPrev'),
+            charNext: document.getElementById('charNext'),
+            charPreview: document.getElementById('charPreview')
         };
 
         // Initialize 2D renderer
@@ -61,60 +67,136 @@ const Game = {
             this.els.modeToggle.addEventListener('click', () => this.toggleMode());
         }
 
-        // Keyboard start
+        // Character selection
+        if (this.els.charPrev) {
+            this.els.charPrev.addEventListener('click', () => this.prevCharacter());
+        }
+        if (this.els.charNext) {
+            this.els.charNext.addEventListener('click', () => this.nextCharacter());
+        }
+
+        // Keyboard controls
         document.addEventListener('keydown', e => {
-            if ((e.key === 'Enter' || e.key === ' ') && this.state !== 'playing') {
-                e.preventDefault();
-                this.start();
+            if (this.state !== 'playing') {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.start();
+                }
+                // Character selection with [ and ]
+                if (e.key === '[' || e.key === 'ArrowLeft') {
+                    this.prevCharacter();
+                }
+                if (e.key === ']' || e.key === 'ArrowRight') {
+                    this.nextCharacter();
+                }
             }
-            // Toggle 3D with 'T' key
+            // Toggle 3D with 'T' key (anytime)
             if (e.key === 't' || e.key === 'T') {
+                e.preventDefault();
                 this.toggleMode();
             }
         });
+
+        // Update character display
+        this.updateCharacterUI();
 
         this.state = 'title';
         this.loop();
     },
 
+    prevCharacter() {
+        Characters.prev();
+        this.updateCharacterUI();
+    },
+
+    nextCharacter() {
+        Characters.next();
+        this.updateCharacterUI();
+    },
+
+    updateCharacterUI() {
+        const char = Characters.data[Characters.current];
+        if (this.els.charName) {
+            this.els.charName.textContent = char.name;
+        }
+        // Draw preview
+        if (this.els.charPreview) {
+            const ctx = this.els.charPreview.getContext('2d');
+            ctx.clearRect(0, 0, 80, 80);
+            Characters.draw(ctx, 40, 55, 0);
+        }
+    },
+
     async toggleMode() {
-        this.is3D = !this.is3D;
-
-        if (this.is3D && !this.renderer3DLoaded) {
-            // Dynamically load 3D renderer
-            try {
-                if (this.els.modeLabel) {
-                    this.els.modeLabel.textContent = 'Loading 3D...';
-                }
-                const module = await import('./renderer3d.js');
-                Renderer3D = module.default;
-                Renderer3D.init(this.els.gameContainer);
-                this.renderer3DLoaded = true;
-
-                // Also bind input to 3D canvas
-                const canvas3D = document.getElementById('game3DCanvas');
-                if (canvas3D) {
-                    Input.init(canvas3D);
-                }
-            } catch (e) {
-                console.error('Failed to load 3D renderer:', e);
-                this.is3D = false;
-            }
+        // If already loading, ignore
+        if (this.els.modeLabel?.textContent === 'Loading 3D...') {
+            return;
         }
 
-        // Update UI
+        const wasPlaying = this.state === 'playing';
+
+        if (!this.is3D) {
+            // Switching TO 3D
+            if (!this.renderer3DLoaded) {
+                try {
+                    if (this.els.modeLabel) {
+                        this.els.modeLabel.textContent = 'Loading 3D...';
+                    }
+                    if (this.els.modeToggle) {
+                        this.els.modeToggle.disabled = true;
+                    }
+
+                    const module = await import('./renderer3d.js');
+                    Renderer3D = module.default;
+                    Renderer3D.init(this.els.gameContainer);
+                    this.renderer3DLoaded = true;
+
+                    // Bind input to 3D canvas too
+                    const canvas3D = document.getElementById('game3DCanvas');
+                    if (canvas3D) {
+                        Input.init(canvas3D);
+                    }
+                } catch (e) {
+                    console.error('Failed to load 3D renderer:', e);
+                    this.renderer3DError = e.message;
+                    if (this.els.modeLabel) {
+                        this.els.modeLabel.textContent = '3D Error';
+                    }
+                    setTimeout(() => {
+                        if (this.els.modeLabel) {
+                            this.els.modeLabel.textContent = '2D Mode';
+                        }
+                    }, 2000);
+                    if (this.els.modeToggle) {
+                        this.els.modeToggle.disabled = false;
+                    }
+                    return;
+                }
+            }
+
+            this.is3D = true;
+        } else {
+            // Switching TO 2D
+            this.is3D = false;
+        }
+
+        // Update button
+        if (this.els.modeToggle) {
+            this.els.modeToggle.disabled = false;
+            this.els.modeToggle.classList.toggle('active', this.is3D);
+        }
         if (this.els.modeLabel) {
             this.els.modeLabel.textContent = this.is3D ? '3D Mode' : '2D Mode';
         }
 
-        // Toggle canvas visibility
-        if (this.state === 'playing') {
-            if (this.is3D) {
+        // Toggle canvas visibility if playing
+        if (wasPlaying) {
+            if (this.is3D && Renderer3D) {
                 this.els.gameCanvas.style.display = 'none';
-                Renderer3D?.show();
+                Renderer3D.show();
             } else {
                 this.els.gameCanvas.style.display = 'block';
-                Renderer3D?.hide();
+                if (Renderer3D) Renderer3D.hide();
             }
         }
     },
@@ -138,10 +220,13 @@ const Game = {
         Audio.init();
         Audio.resume();
 
-        // If 3D mode selected but not loaded, load it now
+        // If 3D mode selected but not loaded, try to load
         if (this.is3D && !this.renderer3DLoaded) {
             await this.toggleMode();
-            this.is3D = true; // Restore flag after toggle
+            if (!this.renderer3DLoaded) {
+                // Failed to load 3D, fall back to 2D
+                this.is3D = false;
+            }
         }
 
         this.state = 'playing';
@@ -167,7 +252,7 @@ const Game = {
             Renderer3D.show();
         } else {
             this.els.gameCanvas.style.display = 'block';
-            Renderer3D?.hide();
+            if (Renderer3D) Renderer3D.hide();
         }
 
         this.updateUI();
@@ -218,7 +303,6 @@ const Game = {
             switch (result.type) {
                 case 'jump':
                     Audio.play('jump');
-                    // 3D: Add small ripple on jump
                     if (this.is3D && Renderer3D) {
                         Renderer3D.addRipple(0.5);
                     }
@@ -227,7 +311,6 @@ const Game = {
                     this.radness += result.score;
                     Physics.createScorePopup(this.pikachu.x, result.y - 35, result.score, result.flips);
                     Audio.play('score');
-                    // 3D: Add ripple and popup
                     if (this.is3D && Renderer3D) {
                         Renderer3D.createSplash(2);
                         Renderer3D.createScorePopup(result.score, result.flips);
@@ -236,14 +319,12 @@ const Game = {
                 case 'crash':
                     this.hp -= result.penalty;
                     Audio.play('splash');
-                    // 3D: Big splash on crash
                     if (this.is3D && Renderer3D) {
                         Renderer3D.createSplash(4);
                     }
                     break;
                 case 'land':
                     Audio.play('land');
-                    // 3D: Normal landing ripple
                     if (this.is3D && Renderer3D) {
                         Renderer3D.createSplash(1);
                     }
@@ -288,7 +369,10 @@ const Game = {
                 this.distance
             );
             Renderer.drawParticles(Physics.particles);
-            Renderer.drawPikachu(this.pikachu.x, this.pikachu.y, this.pikachu.rotation);
+
+            // Use character system for drawing
+            Characters.draw(Renderer.ctx, this.pikachu.x, this.pikachu.y, this.pikachu.rotation);
+
             Renderer.drawScorePopups(Physics.scorePopups);
 
             // Flip indicator

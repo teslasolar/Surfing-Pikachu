@@ -28,6 +28,18 @@
                     <p>1 Flip: 50 pts | 2 Flips: 150 pts | 3 Flips: 500 pts</p>
                 </div>
             </div>
+            <div class="character-select">
+                <h4>SELECT CHARACTER</h4>
+                <div class="char-selector">
+                    <button class="char-arrow" id="charPrev">◀</button>
+                    <div class="char-preview-container">
+                        <canvas id="charPreview" width="80" height="80"></canvas>
+                        <span class="char-name" id="charName">Pikachu</span>
+                    </div>
+                    <button class="char-arrow" id="charNext">▶</button>
+                </div>
+                <span class="char-hint">Use [ ] or ← → to change</span>
+            </div>
             <div class="mode-toggle-container">
                 <button class="mode-toggle" id="modeToggle">
                     <span id="modeLabel">2D Mode</span>
