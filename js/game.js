@@ -4,7 +4,7 @@ import Audio from './audio.js';
 import Input from './input.js';
 import Renderer from './renderer.js';
 import Physics from './physics.js';
-import Characters from './characters.js';
+import Characters from './characters/index.js';
 
 // Dynamic import for 3D (only load if needed)
 let Renderer3D = null;
@@ -115,12 +115,12 @@ const Game = {
     },
 
     updateCharacterUI() {
-        const char = Characters.data[Characters.current];
-        if (this.els.charName) {
+        const char = Characters.current;
+        if (this.els.charName && char) {
             this.els.charName.textContent = char.name;
         }
         // Draw preview
-        if (this.els.charPreview) {
+        if (this.els.charPreview && char) {
             const ctx = this.els.charPreview.getContext('2d');
             ctx.clearRect(0, 0, 80, 80);
             Characters.draw(ctx, 40, 55, 0);
