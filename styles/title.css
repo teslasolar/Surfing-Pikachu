@@ -134,6 +134,84 @@
     box-shadow: 0 1px 0 #4a2dc5;
 }
 
+/* Game Modes Selection */
+.game-modes {
+    margin-top: 15px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+}
+
+.modes-label {
+    font-size: 7px;
+    color: #888;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+
+.mode-links {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.mode-link {
+    font-family: 'Press Start 2P', 'Courier New', monospace;
+    font-size: 6px;
+    padding: 6px 10px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.15s;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+}
+
+.mode-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
+}
+
+.mode-link:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.mode-link.cosmic {
+    background: linear-gradient(180deg, #4a0080 0%, #2a0050 100%);
+    color: #00ffff;
+}
+
+.mode-link.cosmic:hover {
+    background: linear-gradient(180deg, #5a1090 0%, #3a1060 100%);
+}
+
+.mode-link.ssj {
+    background: linear-gradient(180deg, #ff8c00 0%, #cc6600 100%);
+    color: #ffff00;
+}
+
+.mode-link.ssj:hover {
+    background: linear-gradient(180deg, #ff9c10 0%, #dc7610 100%);
+}
+
+.mode-link.sonic {
+    background: linear-gradient(180deg, #0066ff 0%, #0044cc 100%);
+    color: #ffd700;
+}
+
+.mode-link.sonic:hover {
+    background: linear-gradient(180deg, #1076ff 0%, #1054dc 100%);
+}
+
+.mode-link.voxel {
+    background: linear-gradient(180deg, #228b22 0%, #146314 100%);
+    color: #90ee90;
+}
+
+.mode-link.voxel:hover {
+    background: linear-gradient(180deg, #329b32 0%, #247324 100%);
+}
+
 .credits {
     margin-top: 20px;
 }

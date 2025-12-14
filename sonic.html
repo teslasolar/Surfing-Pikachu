@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sonic Pikachu - Speedrun Challenge!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/main.css">
+    <style>
+        /* Sonic Theme Overrides */
+        .title-screen {
+            background: linear-gradient(180deg, #0066cc 0%, #00aaff 50%, #88ddff 100%);
+        }
+
+        .title-screen h1 {
+            color: #ffd700;
+            text-shadow: 3px 3px #0044aa, -1px -1px #003388;
+        }
+
+        .pikachu-title {
+            font-size: 64px;
+            animation: sonic-spin 0.5s linear infinite;
+        }
+
+        @keyframes sonic-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .subtitle {
+            color: #ffffff;
+            text-shadow: 1px 1px #0044aa;
+        }
+
+        .start-btn {
+            background: linear-gradient(180deg, #ff0000 0%, #cc0000 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 0 #880000, 0 6px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #880000, 0 8px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .instructions {
+            background: rgba(0, 50, 100, 0.6);
+            border: 2px solid #ffd700;
+        }
+
+        .instructions h3 {
+            color: #ffd700;
+        }
+
+        .ring-info {
+            margin-top: 10px;
+            padding: 8px;
+            background: rgba(255, 215, 0, 0.3);
+            border: 1px solid #ffd700;
+            border-radius: 4px;
+        }
+
+        .ring-info p {
+            color: #ffd700 !important;
+            font-size: 7px !important;
+        }
+
+        .speed-info {
+            margin-top: 10px;
+            padding: 8px;
+            background: rgba(0, 100, 255, 0.3);
+            border: 1px solid #00aaff;
+            border-radius: 4px;
+        }
+
+        .speed-info p {
+            color: #88ddff !important;
+            font-size: 7px !important;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 15px;
+            color: #ffd700;
+            text-decoration: none;
+            font-size: 8px;
+        }
+
+        .back-link:hover {
+            color: #ffffff;
+        }
+
+        /* HP bar becomes ring bar */
+        .hp-fill {
+            background: linear-gradient(90deg, #ffd700, #ffff00) !important;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #ff0000, #ff6600) !important;
+        }
+
+        /* Game over Sonic style */
+        .game-over-screen {
+            background: linear-gradient(180deg, rgba(0, 50, 100, 0.95), rgba(0, 30, 80, 0.98)) !important;
+        }
+
+        .game-over-screen h2 {
+            color: #ffd700;
+        }
+
+        .restart-btn {
+            background: linear-gradient(180deg, #ff0000 0%, #cc0000 100%) !important;
+            color: #ffffff !important;
+        }
+
+        /* Ring counter style */
+        .radness-value {
+            color: #ffd700 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <canvas id="gameCanvas" width="500" height="400"></canvas>
+
+        <div id="titleScreen" class="title-screen">
+            <div class="title-logo">
+                <div class="pikachu-title">💫</div>
+                <h1>SONIC PIKACHU</h1>
+                <p class="subtitle">Gotta Go Fast!</p>
+            </div>
+
+            <div class="instructions">
+                <h3>🏃 SPEED CONTROLS</h3>
+                <p>⬆️ SPACE / UP / W - Jump</p>
+                <p>⬇️ DOWN / S - Spin Dash</p>
+                <p>⬅️➡️ LEFT/RIGHT - Air Control</p>
+
+                <div class="ring-info">
+                    <p>💍 RING SYSTEM</p>
+                    <p>Collect rings to survive!</p>
+                    <p>Getting hit = lose rings</p>
+                    <p>No rings + hit = Game Over!</p>
+                </div>
+
+                <div class="speed-info">
+                    <p>⚡ SPEED FEATURES</p>
+                    <p>🔴 Springs = Super bounce!</p>
+                    <p>🔵 Boost Pads = Speed burst!</p>
+                    <p>⚫ Spikes = Danger! (Spin through them)</p>
+                </div>
+
+                <div class="scoring-info">
+                    <h4>🏆 SPEEDRUN</h4>
+                    <p>Reach the goal as fast as possible!</p>
+                    <p>Spins in air = Bonus rings!</p>
+                </div>
+            </div>
+
+            <button class="start-btn" id="startBtn">GOTTA GO FAST!</button>
+
+            <a href="index.html" class="back-link">← Back to Classic Mode</a>
+        </div>
+
+        <div id="gameOverScreen" class="game-over-screen">
+            <h2 id="gameOverTitle">GAME OVER</h2>
+            <div class="final-stats">
+                <p>Rings: <span id="finalRadness">0</span></p>
+                <p>Time: <span id="finalHP">0:00.00</span></p>
+                <p class="final-total">Score: <span id="finalScore">0</span></p>
+            </div>
+            <button class="restart-btn" id="restartBtn">TRY AGAIN!</button>
+            <br>
+            <a href="index.html" class="back-link">← Back to Classic Mode</a>
+        </div>
+
+        <div id="gameUI" class="game-ui">
+            <div class="stat-bar">
+                <span class="stat-label">PROGRESS</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+            <div class="stat-bar">
+                <span class="stat-label">RINGS</span>
+                <div class="hp-bar">
+                    <div class="hp-fill" id="hpFill"></div>
+                </div>
+                <span class="hp-value" id="hpValue">0</span>
+            </div>
+            <div class="radness">
+                <span class="stat-label">TIME</span>
+                <span class="radness-value" id="radnessValue">0</span>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/modes/sonic/game.js"></script>
+</body>
+</html>

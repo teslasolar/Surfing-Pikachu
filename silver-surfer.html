@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silver Surfer Pikachu - Cosmic Escape</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/main.css">
+    <style>
+        /* Silver Surfer Theme Overrides */
+        .title-screen {
+            background: linear-gradient(180deg, #0a0015 0%, #1a0a2e 50%, #2d1b4e 100%);
+        }
+
+        .title-screen h1 {
+            color: #c0c0c0;
+            text-shadow: 3px 3px #4a0080, -1px -1px #9932cc, 0 0 20px #00ffff;
+        }
+
+        .pikachu-title {
+            filter: grayscale(100%) brightness(1.5);
+        }
+
+        .subtitle {
+            color: #9932cc;
+        }
+
+        .start-btn {
+            background: linear-gradient(180deg, #c0c0c0 0%, #808080 100%);
+            color: #1a0a2e;
+            box-shadow: 0 4px 0 #4a4a4a, 0 6px 10px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .start-btn:hover {
+            box-shadow: 0 6px 0 #4a4a4a, 0 8px 15px rgba(0, 0, 0, 0.3), 0 0 30px rgba(0, 255, 255, 0.5);
+        }
+
+        .instructions {
+            background: rgba(74, 0, 128, 0.4);
+            border: 1px solid #9932cc;
+        }
+
+        .instructions h3 {
+            color: #00ffff;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 15px;
+            color: #9932cc;
+            text-decoration: none;
+            font-size: 8px;
+        }
+
+        .back-link:hover {
+            color: #00ffff;
+        }
+
+        /* Galactus warning */
+        .galactus-warning {
+            margin-top: 10px;
+            padding: 8px;
+            background: rgba(255, 0, 255, 0.2);
+            border: 1px solid #ff00ff;
+            border-radius: 4px;
+        }
+
+        .galactus-warning p {
+            color: #ff69b4 !important;
+            font-size: 7px !important;
+        }
+
+        /* HP bar cosmic theme */
+        .hp-fill {
+            background: linear-gradient(90deg, #4a0080, #9932cc, #00ffff) !important;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #4a0080, #00ffff) !important;
+        }
+
+        /* Game over cosmic */
+        .game-over-screen h2 {
+            color: #00ffff;
+            text-shadow: 0 0 20px #00ffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <canvas id="gameCanvas" width="500" height="400"></canvas>
+
+        <div id="titleScreen" class="title-screen">
+            <div class="title-logo">
+                <div class="pikachu-title">⚡</div>
+                <h1>SILVER SURFER PIKACHU</h1>
+                <p class="subtitle">Escape from Galactus!</p>
+            </div>
+
+            <div class="instructions">
+                <h3>🌌 COSMIC CONTROLS</h3>
+                <p>⬆️ SPACE / UP / W - Cosmic Jump</p>
+                <p>⬅️➡️ LEFT/RIGHT or A/D - Spin in space</p>
+                <p>🌀 Land flips to generate cosmic debris!</p>
+
+                <div class="galactus-warning">
+                    <p>⚠️ GALACTUS IS PURSUING YOU!</p>
+                    <p>Build Power Cosmic with tricks to boost speed!</p>
+                    <p>Don't let him catch you!</p>
+                </div>
+
+                <div class="scoring-info">
+                    <h4>✨ POWER COSMIC</h4>
+                    <p>Flips charge your Power Cosmic meter</p>
+                    <p>Higher power = faster surfing!</p>
+                </div>
+            </div>
+
+            <button class="start-btn" id="startBtn">SURF THE COSMOS</button>
+
+            <a href="index.html" class="back-link">← Back to Classic Mode</a>
+        </div>
+
+        <div id="gameOverScreen" class="game-over-screen">
+            <h2 id="gameOverTitle">GAME OVER</h2>
+            <div class="final-stats">
+                <p>Cosmic Style: <span id="finalRadness">0</span></p>
+                <p>Energy Left: <span id="finalHP">0</span></p>
+                <p class="final-total">Total: <span id="finalScore">0</span></p>
+            </div>
+            <button class="restart-btn" id="restartBtn">RETRY ESCAPE</button>
+            <br>
+            <a href="index.html" class="back-link">← Back to Classic Mode</a>
+        </div>
+
+        <div id="gameUI" class="game-ui">
+            <div class="stat-bar">
+                <span class="stat-label">DISTANCE</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+            <div class="stat-bar">
+                <span class="stat-label">ENERGY</span>
+                <div class="hp-bar">
+                    <div class="hp-fill" id="hpFill"></div>
+                </div>
+                <span class="hp-value" id="hpValue">2000</span>
+            </div>
+            <div class="radness">
+                <span class="stat-label">COSMIC STYLE</span>
+                <span class="radness-value" id="radnessValue">0</span>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/modes/silver-surfer/game.js"></script>
+</body>
+</html>

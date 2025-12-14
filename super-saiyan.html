@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Saiyan Pikachu - Save Planet Vegeta!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/main.css">
+    <style>
+        /* DBZ Theme Overrides */
+        .title-screen {
+            background: linear-gradient(180deg, #1a0505 0%, #3d0a0a 50%, #5c1515 100%);
+        }
+
+        .title-screen h1 {
+            color: #ffd700;
+            text-shadow: 3px 3px #ff4500, -1px -1px #ff6600, 0 0 30px #ffff00;
+            animation: power-up 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes power-up {
+            from { text-shadow: 3px 3px #ff4500, -1px -1px #ff6600, 0 0 20px #ffff00; }
+            to { text-shadow: 3px 3px #ff4500, -1px -1px #ff6600, 0 0 40px #ffff00, 0 0 60px #ff6600; }
+        }
+
+        .pikachu-title {
+            font-size: 64px;
+            animation: ssj-bounce 0.3s ease-in-out infinite alternate;
+        }
+
+        @keyframes ssj-bounce {
+            from { transform: translateY(0) scale(1); }
+            to { transform: translateY(-5px) scale(1.05); }
+        }
+
+        .subtitle {
+            color: #ff6600;
+        }
+
+        .start-btn {
+            background: linear-gradient(180deg, #ffd700 0%, #ff8c00 100%);
+            color: #1a0505;
+            box-shadow: 0 4px 0 #cc6600, 0 6px 10px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 215, 0, 0.5);
+            animation: btn-glow 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes btn-glow {
+            from { box-shadow: 0 4px 0 #cc6600, 0 6px 10px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 215, 0, 0.3); }
+            to { box-shadow: 0 4px 0 #cc6600, 0 6px 10px rgba(0, 0, 0, 0.3), 0 0 40px rgba(255, 215, 0, 0.6); }
+        }
+
+        .instructions {
+            background: rgba(100, 30, 0, 0.4);
+            border: 1px solid #ff6600;
+        }
+
+        .instructions h3 {
+            color: #ffd700;
+        }
+
+        .ki-info {
+            margin-top: 10px;
+            padding: 8px;
+            background: rgba(255, 215, 0, 0.2);
+            border: 1px solid #ffd700;
+            border-radius: 4px;
+        }
+
+        .ki-info p {
+            color: #ffd700 !important;
+            font-size: 7px !important;
+        }
+
+        .villain-info {
+            margin-top: 10px;
+            padding: 8px;
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid #ff4500;
+            border-radius: 4px;
+        }
+
+        .villain-info p {
+            color: #ff6b6b !important;
+            font-size: 7px !important;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 15px;
+            color: #ff6600;
+            text-decoration: none;
+            font-size: 8px;
+        }
+
+        .back-link:hover {
+            color: #ffd700;
+        }
+
+        /* HP bar DBZ theme */
+        .hp-fill {
+            background: linear-gradient(90deg, #ff4500, #ffd700) !important;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #ff6600, #ffff00) !important;
+        }
+
+        /* Game over DBZ */
+        .game-over-screen h2 {
+            color: #ffd700;
+            text-shadow: 0 0 20px #ff6600;
+        }
+
+        .restart-btn {
+            background: linear-gradient(180deg, #ffd700 0%, #ff8c00 100%) !important;
+            color: #1a0505 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <canvas id="gameCanvas" width="500" height="400"></canvas>
+
+        <div id="titleScreen" class="title-screen">
+            <div class="title-logo">
+                <div class="pikachu-title">⚡</div>
+                <h1>SUPER SAIYAN PIKACHU</h1>
+                <p class="subtitle">Save Planet Vegeta!</p>
+            </div>
+
+            <div class="instructions">
+                <h3>🔥 SAIYAN CONTROLS</h3>
+                <p>⬆️ SPACE / UP / W - Power Jump</p>
+                <p>⬅️➡️ LEFT/RIGHT or A/D - Spin Attack</p>
+                <p>💥 X / K - Fire Ki Blast!</p>
+
+                <div class="ki-info">
+                    <p>⚡ KI POWER SYSTEM</p>
+                    <p>Land flips to charge Ki!</p>
+                    <p>50% Ki = SSJ | 75% = SSJ2 | 100% = SSJ3!</p>
+                    <p>Higher forms = More power!</p>
+                </div>
+
+                <div class="villain-info">
+                    <p>👿 VILLAINS INCOMING!</p>
+                    <p>Frieza, Cell, and Buu are attacking!</p>
+                    <p>Defeat them with Ki Blasts!</p>
+                </div>
+
+                <div class="scoring-info">
+                    <h4>💪 POWER LEVELS</h4>
+                    <p>Flips charge Ki • Ki Blasts cost 20 Ki</p>
+                    <p>Defeat villains for bonus points!</p>
+                </div>
+            </div>
+
+            <button class="start-btn" id="startBtn">GO BEYOND!</button>
+
+            <a href="index.html" class="back-link">← Back to Classic Mode</a>
+        </div>
+
+        <div id="gameOverScreen" class="game-over-screen">
+            <h2 id="gameOverTitle">GAME OVER</h2>
+            <div class="final-stats">
+                <p>Power Level: <span id="finalRadness">0</span></p>
+                <p>Energy Left: <span id="finalHP">0</span></p>
+                <p class="final-total">Total: <span id="finalScore">0</span></p>
+            </div>
+            <button class="restart-btn" id="restartBtn">TRAIN AGAIN</button>
+            <br>
+            <a href="index.html" class="back-link">← Back to Classic Mode</a>
+        </div>
+
+        <div id="gameUI" class="game-ui">
+            <div class="stat-bar">
+                <span class="stat-label">DISTANCE</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+            <div class="stat-bar">
+                <span class="stat-label">HP</span>
+                <div class="hp-bar">
+                    <div class="hp-fill" id="hpFill"></div>
+                </div>
+                <span class="hp-value" id="hpValue">2500</span>
+            </div>
+            <div class="radness">
+                <span class="stat-label">POWER</span>
+                <span class="radness-value" id="radnessValue">0</span>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/modes/super-saiyan/game.js"></script>
+</body>
+</html>

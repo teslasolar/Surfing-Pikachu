@@ -1,9 +1,9 @@
 {
     "name": "south",
-    "description": "Footer section - start button, voxel link, and credits",
+    "description": "Footer section - start button, game modes, and credits",
     "components": [
         "start-button.html",
-        "voxel-link.html",
+        "game-modes.html",
         "credits.html"
     ]
 }
