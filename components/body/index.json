@@ -1,0 +1,9 @@
+{
+    "name": "body",
+    "description": "Main game area - canvas, UI, game over",
+    "components": [
+        "canvas.html",
+        "game-ui.html",
+        "game-over.html"
+    ]
+}

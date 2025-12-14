@@ -1,0 +1,8 @@
+{
+    "name": "north",
+    "description": "Header section - title and instructions",
+    "components": [
+        "title.html",
+        "instructions.html"
+    ]
+}

@@ -9,91 +9,18 @@
 </head>
 <body>
     <div class="game-container">
+        <!-- Title Screen - Built from dock components -->
         <div class="title-screen" id="titleScreen">
-            <div class="title-logo">
-                <div class="pikachu-title">⚡</div>
-                <h1>PIKACHU'S BEACH</h1>
-                <div class="subtitle">Surfing Pikachu Minigame</div>
+            <div id="dockNorth"></div>
+            <div class="dock-options">
+                <div id="dockWest"></div>
+                <div id="dockEast"></div>
             </div>
-            <div class="instructions">
-                <h3>HOW TO PLAY</h3>
-                <p><strong>← →</strong> Arrow Keys to flip while in the air</p>
-                <p><strong>↑ / Space</strong> to jump off waves</p>
-                <p>Land flat on the water to avoid crashing!</p>
-                <div class="gamepad-info">
-                    <p><strong>Gamepad:</strong> A/B to jump, Left Stick to flip</p>
-                </div>
-                <div class="scoring-info">
-                    <h4>SCORING</h4>
-                    <p>1 Flip: 50 pts | 2 Flips: 150 pts | 3 Flips: 500 pts</p>
-                </div>
-            </div>
-            <div class="character-select">
-                <h4>SELECT CHARACTER</h4>
-                <div class="char-selector">
-                    <button class="char-arrow" id="charPrev">◀</button>
-                    <div class="char-preview-container">
-                        <canvas id="charPreview" width="80" height="80"></canvas>
-                        <span class="char-name" id="charName">Pikachu</span>
-                    </div>
-                    <button class="char-arrow" id="charNext">▶</button>
-                </div>
-                <span class="char-hint">Use [ ] or ← → to change</span>
-            </div>
-            <div class="mode-toggle-container">
-                <button class="mode-toggle" id="modeToggle">
-                    <span id="modeLabel">2D Mode</span>
-                </button>
-                <span class="mode-hint">Press T to toggle</span>
-            </div>
-            <button class="start-btn" id="startBtn">START GAME</button>
-            <div class="credits">
-                <p>Inspired by Pokémon Yellow (1998)</p>
-            </div>
+            <div id="dockSouth"></div>
         </div>
 
-        <canvas id="gameCanvas" width="480" height="320"></canvas>
-
-        <div class="game-ui" id="gameUI">
-            <div class="ui-left">
-                <div class="progress-label">PROGRESS</div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
-            </div>
-            <div class="ui-center">
-                <div class="radness">
-                    <span class="label">RADNESS</span>
-                    <span class="value" id="radnessValue">0</span>
-                </div>
-            </div>
-            <div class="ui-right">
-                <div class="hp-label">HP</div>
-                <div class="hp-bar">
-                    <div class="hp-fill" id="hpFill"></div>
-                </div>
-                <div class="hp-value" id="hpValue">6000</div>
-            </div>
-        </div>
-
-        <div class="game-over-screen" id="gameOverScreen">
-            <h2 id="gameOverTitle">GAME OVER</h2>
-            <div class="final-score">
-                <div class="score-row">
-                    <span>Radness:</span>
-                    <span id="finalRadness">0</span>
-                </div>
-                <div class="score-row">
-                    <span>HP Bonus:</span>
-                    <span id="finalHP">0</span>
-                </div>
-                <div class="score-row total">
-                    <span>TOTAL SCORE:</span>
-                    <span id="finalScore">0</span>
-                </div>
-            </div>
-            <button class="start-btn" id="restartBtn">PLAY AGAIN</button>
-        </div>
+        <!-- Game Area - Built from body components -->
+        <div id="gameBody"></div>
     </div>
 
     <script type="module" src="js/game.js"></script>

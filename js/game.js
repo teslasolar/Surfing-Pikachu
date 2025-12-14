@@ -5,6 +5,7 @@ import Input from './input.js';
 import Renderer from './renderer.js';
 import Physics from './physics.js';
 import Characters from './characters/index.js';
+import Components from './components.js';
 
 // Dynamic import for 3D (only load if needed)
 let Renderer3D = null;
@@ -26,10 +27,20 @@ const Game = {
     els: {},
 
     async init() {
-        // Load config first
+        // Load components first
+        await Components.loadAll();
+
+        // Inject dock components into containers
+        Components.inject('dockNorth', 'north');
+        Components.inject('dockWest', 'west');
+        Components.inject('dockEast', 'east');
+        Components.inject('dockSouth', 'south');
+        Components.inject('gameBody', 'body');
+
+        // Load config
         await Config.load();
 
-        // Cache DOM elements
+        // Cache DOM elements (after components are injected)
         this.els = {
             titleScreen: document.getElementById('titleScreen'),
             gameOverScreen: document.getElementById('gameOverScreen'),

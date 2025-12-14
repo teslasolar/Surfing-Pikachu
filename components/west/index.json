@@ -1,0 +1,7 @@
+{
+    "name": "west",
+    "description": "Left side controls - character selection",
+    "components": [
+        "character-select.html"
+    ]
+}

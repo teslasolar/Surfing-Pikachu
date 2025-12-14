@@ -1,0 +1,8 @@
+{
+    "name": "south",
+    "description": "Footer section - start button and credits",
+    "components": [
+        "start-button.html",
+        "credits.html"
+    ]
+}

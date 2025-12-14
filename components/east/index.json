@@ -1,0 +1,7 @@
+{
+    "name": "east",
+    "description": "Right side controls - mode toggle",
+    "components": [
+        "mode-toggle.html"
+    ]
+}
