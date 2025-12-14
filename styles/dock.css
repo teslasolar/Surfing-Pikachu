@@ -1,0 +1,19 @@
+/* Dock Layout styles */
+.dock-options {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+#dockWest, #dockEast {
+    flex: 1;
+}
+
+#dockNorth {
+    margin-bottom: 10px;
+}
+
+#dockSouth {
+    margin-top: 15px;
+}

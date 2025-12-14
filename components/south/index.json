@@ -1,8 +1,9 @@
 {
     "name": "south",
-    "description": "Footer section - start button and credits",
+    "description": "Footer section - start button, voxel link, and credits",
     "components": [
         "start-button.html",
+        "voxel-link.html",
         "credits.html"
     ]
 }

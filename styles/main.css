@@ -1,0 +1,9 @@
+/* Main stylesheet - imports all modules */
+@import url('./base.css');
+@import url('./game.css');
+@import url('./title.css');
+@import url('./gameover.css');
+@import url('./characters.css');
+@import url('./mode.css');
+@import url('./dock.css');
+@import url('./responsive.css');

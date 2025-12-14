@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voxel World - Pokemon Exploration</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌍</text></svg>">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            font-family: 'Press Start 2P', monospace;
+            background: #000;
+        }
+
+        #gameContainer {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        #voxelCanvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* HUD */
+        #hud {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 15px;
+            color: #fff;
+            text-shadow: 2px 2px #000;
+            pointer-events: none;
+        }
+
+        #coords {
+            font-size: 12px;
+            background: rgba(0,0,0,0.5);
+            padding: 8px 12px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        /* Crosshair */
+        #crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+        }
+
+        #crosshair::before,
+        #crosshair::after {
+            content: '';
+            position: absolute;
+            background: rgba(255,255,255,0.8);
+        }
+
+        #crosshair::before {
+            width: 2px;
+            height: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        #crosshair::after {
+            width: 100%;
+            height: 2px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* Start Overlay */
+        #startOverlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, rgba(30,58,95,0.95) 0%, rgba(13,33,55,0.95) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
+
+        #startOverlay h1 {
+            font-size: 28px;
+            color: #ffcb05;
+            text-shadow: 3px 3px #000;
+            margin-bottom: 10px;
+        }
+
+        #startOverlay h2 {
+            font-size: 14px;
+            color: #87ceeb;
+            margin-bottom: 30px;
+        }
+
+        .char-select {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            background: rgba(0,0,0,0.4);
+            padding: 15px 25px;
+            border-radius: 8px;
+        }
+
+        .char-select h3 {
+            font-size: 10px;
+            color: #ffcb05;
+            margin-bottom: 10px;
+        }
+
+        .char-arrow {
+            font-size: 20px;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(180deg, #444 0%, #333 100%);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .char-arrow:hover {
+            background: linear-gradient(180deg, #555 0%, #444 100%);
+        }
+
+        #charName {
+            font-size: 14px;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        #instructions {
+            background: rgba(0,0,0,0.4);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            max-width: 400px;
+            text-align: left;
+        }
+
+        #instructions h3 {
+            font-size: 10px;
+            color: #ffcb05;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        #instructions p {
+            font-size: 8px;
+            color: #ddd;
+            margin-bottom: 6px;
+            line-height: 1.8;
+        }
+
+        #startBtn {
+            font-family: inherit;
+            font-size: 14px;
+            padding: 15px 40px;
+            background: linear-gradient(180deg, #ffcb05 0%, #f5a623 100%);
+            color: #1a1a2e;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #c7920a;
+            transition: all 0.1s;
+        }
+
+        #startBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #c7920a;
+        }
+
+        #startBtn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #c7920a;
+        }
+
+        .back-link {
+            position: absolute;
+            bottom: 20px;
+            font-size: 10px;
+        }
+
+        .back-link a {
+            color: #87ceeb;
+            text-decoration: none;
+        }
+
+        .back-link a:hover {
+            color: #ffcb05;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <canvas id="voxelCanvas"></canvas>
+
+        <div id="hud">
+            <div id="coords">X: 0 Y: 0 Z: 0</div>
+            <div id="crosshair"></div>
+        </div>
+
+        <div id="startOverlay">
+            <h1>🌍 VOXEL WORLD</h1>
+            <h2>Procedural Pokemon Exploration</h2>
+
+            <div class="char-select">
+                <button class="char-arrow" id="charPrev">◀</button>
+                <span id="charName">Pikachu</span>
+                <button class="char-arrow" id="charNext">▶</button>
+            </div>
+
+            <div id="instructions">
+                <h3>CONTROLS</h3>
+                <p>🎮 WASD / Arrows - Move</p>
+                <p>🖱️ Mouse - Look around</p>
+                <p>⬆️ Space - Jump</p>
+                <p>✈️ F - Toggle fly mode</p>
+                <p>⬇️ Shift (flying) - Descend</p>
+                <p>🚪 ESC - Release mouse</p>
+                <p>🔄 [ ] - Change character</p>
+            </div>
+
+            <button id="startBtn">CLICK TO PLAY</button>
+
+            <div class="back-link">
+                <a href="index.html">← Back to Surfing Game</a>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/voxel/game.js"></script>
+</body>
+</html>

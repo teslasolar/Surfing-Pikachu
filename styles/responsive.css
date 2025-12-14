@@ -1,0 +1,28 @@
+/* Responsive styles */
+@media (max-width: 500px) {
+    .game-container {
+        width: 100%;
+        max-width: 480px;
+        border-width: 2px;
+        border-radius: 0;
+    }
+
+    #gameCanvas {
+        width: 100%;
+        height: auto;
+    }
+}
+
+/* Mobile touch controls hint */
+.touch-hint {
+    display: none;
+    font-size: 7px;
+    color: #888;
+    margin-top: 10px;
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .touch-hint {
+        display: block;
+    }
+}
